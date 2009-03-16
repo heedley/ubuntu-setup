@@ -77,6 +77,8 @@ Things this script doesn't do yet
 * Tune MySQL
 * Add memcached to runlevel
 * Create God monitoring scripts
+* Optionally set up SSL on Nginx
+* Prepare Capistrano recipe
 
 LICENSE:
 --------
