@@ -4,11 +4,11 @@ Ubuntu Setup
 This script prepares your Ubuntu Server to run Rails apps. Some security settings are also
 applied like changing the SSH port and blocking all ports but 80 (www), 443 (https) and your SSH port. 
 
-An sudoer user will be created to deploy your application. Here's the deployment layout:
+A sudoer user will be created to deploy your application. Here's the deployment layout:
 
-    /home/<user>/config/thin.yml ~> your thin configuration file
+    /home/<user>/config/thin.yml          ~> your thin configuration file
     /home/<user>/config/nginx/<user>.conf ~> your nginx application configuration file
-    /home/<user>/releases ~> your Capistrano releases directory
+    /home/<user>/releases                 ~> your Capistrano releases directory
 
 Thin and Nginx are added to boot start, so you're application will be automatically started
 after restarting the server. 
@@ -76,6 +76,7 @@ Things this script doesn't do yet
 * Configure Postfix
 * Tune MySQL
 * Add memcached to runlevel
+* Create God monitoring scripts
 
 LICENSE:
 --------
