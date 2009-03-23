@@ -7,7 +7,7 @@ applied like changing the SSH port and blocking all ports but 80 (www), 443 (htt
 
 ![Script dialog](http://f.simplesideias.com.br/thin-port.png)
 
-A sudoer user will be created to deploy your application. Here's the deployment layout:
+A sudoer user will be created to deploy your application. Here's how $HOME is structured:
 
     /home/<user>/config/thin.yml          ~> thin configuration file
     /home/<user>/config/database.yml      ~> rails database.yml file
@@ -36,7 +36,7 @@ Now download the script installer and uncompress it.
     su root
     cd ~
     wget http://github.com/fnando/ubuntu-setup/tarball/master -O ubuntu-setup.tar.gz
-    tar xvf ubuntu-setup
+    tar xvf ubuntu-setup.tar.gz
     rm ubuntu-setup.tar.gz
     mv fnando-ubuntu-setup* ubuntu-setup
     cd ubuntu-setup

@@ -12,7 +12,7 @@ tmpFile=`tempfile`
 #---------------------------------------------------------------
 installRuby()
 {
-    sudo aptitude -y install ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8 libreadline-ruby1.8 libruby1.8 libopenssl-ruby sqlite3 libsqlite3-ruby1.8 rubygems
+    sudo aptitude -y install ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8 libreadline-ruby1.8 libruby1.8 libopenssl-ruby sqlite3 libsqlite3-ruby1.8
     sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
     sudo ln -s /usr/bin/ri1.8 /usr/bin/ri
     sudo ln -s /usr/bin/rdoc1.8 /usr/bin/rdoc
