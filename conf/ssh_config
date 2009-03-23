@@ -49,4 +49,3 @@ Host *
     HashKnownHosts yes
     GSSAPIAuthentication yes
     GSSAPIDelegateCredentials no
-    AllowUsers %username% root

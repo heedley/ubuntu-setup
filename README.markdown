@@ -2,15 +2,21 @@ Ubuntu Setup
 ============
 
 This script prepares your Ubuntu Server to run Rails apps. Some security settings are also
-applied like changing the SSH port and blocking all ports but 80 (www), 443 (https) and your SSH port. 
+applied like changing the SSH port and blocking all ports but 80 (www), 443 (https) and your SSH port 
+(through Iptables). 
+
+![Script dialog](http://f.simplesideias.com.br/thin-port.png)
 
 A sudoer user will be created to deploy your application. Here's the deployment layout:
 
-    /home/<user>/config/thin.yml          ~> your thin configuration file
-    /home/<user>/config/nginx/<user>.conf ~> your nginx application configuration file
-    /home/<user>/releases                 ~> your Capistrano releases directory
+    /home/<user>/config/thin.yml          ~> thin configuration file
+    /home/<user>/config/database.yml      ~> rails database.yml file
+    /home/<user>/config/nginx/<user>.conf ~> nginx application configuration file
+    /home/<user>/config/memcached.conf    ~> memcached configuration file
+    /home/<user>/website                  ~> Capistrano deployment directory
+    /home/<user>/config/deploy.rb         ~> Capistrano deploy.rb
 
-Thin and Nginx are added to boot start, so you're application will be automatically started
+Thin, Nginx and Memcached are added to boot start, so you're application will be automatically started
 after restarting the server. 
 
 **ATTENTION:** I ran this script in a Parallels Ubuntu install, without any problem. 
@@ -19,7 +25,7 @@ I'm still developing my application, so I haven't had the chance to test it in a
 Usage
 -----
 
-Before you start, make sure you're runing this script in a fresh Ubuntu install.
+Before you start, make sure you're running this script in a fresh Ubuntu install.
 
 You should be logged as root. If you have a VPS, then you probably have a root account.
 If you're running an Ubuntu Server on your own, you have to enable the root account.
@@ -35,27 +41,24 @@ Now download the script installer and uncompress it.
     mv fnando-ubuntu-setup* ubuntu-setup
     cd ubuntu-setup
     
-Open the file `setup.sh` and configure the variables that will be used across the script. 
-These are the default values:
+Run `sh install.sh` and answer to the dialogs.
 
-    # set the new user that will be created
-    username="app"
+### Deploying the application
 
-    # switch ssh port to avoid exploits
-    ssh_port=222
+First, run the command `capify` in your project root.
 
-    # define the number of thin instances
-    thin_instances=3
+    capify .
 
-    thin_port_start=3000
+Copy the sample Capistrano recipe from `$HOME/conf/deploy.rb` on your server
+to `your-project/conf/deploy.rb`.
 
-    # set an admin email
-    admin_email="root@localhost"
+You need to change the repository and SCM (which defaults to Git). When you're done just run the 
+following commands:
 
-    # set your domain (without www)
-    domain="domain.com"
+    cap deploy:setup # just the first time
+    cap deploy
 
-After setting these variables run the script with `sudo sh setup.sh`
+You may need to add the server SSH key to your SCM server. Alternatively you can set up the [SSH Agent](http://upc.lbl.gov/docs/user/sshagent.html).
 
 What will be installed?
 -----------------------
@@ -63,22 +66,32 @@ What will be installed?
 * Ruby
 * Nginx
 * Memcached
-* MySQL
+* MySQL and analysis tools
+    - mytop ~ <http://jeremy.zawodny.com/mysql/mytop/>
+    - Maatkit ~ <http://www.maatkit.org/>
 * Git
 * Subversion
 * Postfix
-* Denyhosts
-* Logwatch
+* Denyhosts & Logwatch
 
-Things this script doesn't do yet
----------------------------------
+Troubleshooting
+---------------
 
-* Configure Postfix
-* Tune MySQL
-* Add memcached to runlevel
+### When I start the Denyhosts daemon my IP is added to the `hosts.deny` list. What should I do?
+
+Erase your `/var/log/auth.log` and remove all files under `/var/lib/denyhosts`. The following command should do the trick:
+
+    su root
+    > /var/log/auth.log
+    rm /var/lib/denyhosts/*
+
+You also need to remove your IP from `/etc/hosts.deny`.
+
+TODO
+----
+
+* Script should configure Postfix
 * Create God monitoring scripts
-* Optionally set up SSL on Nginx
-* Prepare Capistrano recipe
 
 LICENSE:
 --------

@@ -6,14 +6,15 @@
 # Required-Stop:     $all
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: starts the nginx web server
-# Description:       starts nginx using start-stop-daemon
+# Short-Description: Start nginx server at boot time
+# Description:       Enable service provided by nginx.
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/local/bin/nginx
+DAEMON=`which nginx`
 NAME=nginx
 DESC=nginx
+PIDFILE="/var/run/$NAME.pid"
 
 test -x $DAEMON || exit 0
 
@@ -29,33 +30,33 @@ set -e
 case "$1" in
   start)
     echo -n "Starting $DESC: "
-    start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
+    start-stop-daemon --start --quiet --pidfile $PIDFILE \
         --exec $DAEMON -- $DAEMON_OPTS || true
     echo "$NAME."
     ;;
   stop)
     echo -n "Stopping $DESC: "
-    start-stop-daemon --stop --quiet --pidfile /var/run/$NAME.pid \
+    start-stop-daemon --stop --quiet --pidfile $PIDFILE \
         --exec $DAEMON || true
     echo "$NAME."
     ;;
   restart|force-reload)
     echo -n "Restarting $DESC: "
     start-stop-daemon --stop --quiet --pidfile \
-        /var/run/$NAME.pid --exec $DAEMON || true
+        $PIDFILE --exec $DAEMON || true
     sleep 1
     start-stop-daemon --start --quiet --pidfile \
-        /var/run/$NAME.pid --exec $DAEMON -- $DAEMON_OPTS || true
+        $PIDFILE --exec $DAEMON -- $DAEMON_OPTS || true
     echo "$NAME."
     ;;
   reload)
       echo -n "Reloading $DESC configuration: "
-      start-stop-daemon --stop --signal HUP --quiet --pidfile /var/run/$NAME.pid \
+      start-stop-daemon --stop --signal HUP --quiet --pidfile $PIDFILE \
           --exec $DAEMON || true
       echo "$NAME."
       ;;
   status)
-      status_of_proc -p /var/run/$NAME.pid "$DAEMON" $NAME && exit 0 || exit $?
+      status_of_proc -p $PIDFILE "$DAEMON" $NAME && exit 0 || exit $?
       ;;
   *)
     N=/etc/init.d/$NAME
